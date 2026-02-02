@@ -8,6 +8,10 @@ const productSchema = new mongoose.Schema(
     category: String,
     type: String, // men | women | fragrances
     description: String,
+    image: {
+      type: String,
+      required: true,
+    },
 
     isPopular: {
       type: Boolean,

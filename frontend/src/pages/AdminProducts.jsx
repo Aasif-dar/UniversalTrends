@@ -52,6 +52,8 @@ const AdminProducts = () => {
                 <th className="p-3 text-left">Price</th>
                 <th className="p-3 text-left">Popular</th>
                 <th className="p-3 text-left">Action</th>
+                <th className="p-3 text-left">Image</th>
+
               </tr>
             </thead>
 
@@ -72,6 +74,12 @@ const AdminProducts = () => {
                       Delete
                     </button>
                   </td>
+                  <td className="p-3">
+                    <img
+                    src={`http://localhost:5000${product.image}`}
+                    className="w-12 h-12 object-cover rounded"/>
+                  </td>
+
                 </tr>
               ))}
             </tbody>
