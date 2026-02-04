@@ -1,10 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "../Context/CartContext";
-
-import menProducts from "../data/MensProduct";
-import womenProducts from "../data/WomensProducts";
-import fragranceProducts from "../data/FragrenceProducts";
 
 const sizes = ["S", "M", "L", "XL", "XXL"];
 
@@ -13,17 +9,39 @@ const ProductDetails = () => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
 
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState(null);
 
-  const allProducts = [
-    ...menProducts,
-    ...womenProducts,
-    ...fragranceProducts,
-  ];
+  // 🔵 FETCH PRODUCT FROM BACKEND
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:5000/api/products/${id}`
+        );
 
-  const product = allProducts.find(
-    (item) => String(item.id) === id
-  );
+        if (!res.ok) throw new Error("Not found");
+
+        const data = await res.json();
+        setProduct(data);
+      } catch {
+        setProduct(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        Loading product...
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -40,16 +58,17 @@ const ProductDetails = () => {
   }
 
   const handleAddToCart = () => {
-    if (!selectedSize && product.category !== "Perfumes") {
+    if (!selectedSize && product.type !== "fragrances") {
       alert("Please select a size");
       return;
     }
 
-   addToCart({
-    ...product,
-    size: selectedSize || "Standard",
-  });
-};
+    addToCart({
+      ...product,
+      size: selectedSize || "Standard",
+      quantity: 1
+    });
+  };
 
   return (
     <section className="py-16 bg-gray-50">
@@ -57,22 +76,21 @@ const ProductDetails = () => {
 
         {/* Breadcrumb */}
         <p className="text-sm text-gray-500 mb-6">
-          Home / {product.category}
+          Home / {product.type}
         </p>
 
-        {/* Main */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
 
-          {/* Image */}
+          {/* IMAGE */}
           <div className="bg-white border rounded-lg overflow-hidden">
             <img
-              src={product.image}
+              src={`http://localhost:5000${product.image}`}
               alt={product.name}
               className="w-full h-[420px] object-cover"
             />
           </div>
 
-          {/* Info */}
+          {/* INFO */}
           <div>
             <h1 className="text-3xl font-semibold mb-4">
               {product.name}
@@ -82,15 +100,12 @@ const ProductDetails = () => {
               ₹{product.price}
             </p>
 
-            {/* Description */}
             <p className="text-gray-600 mb-8 leading-relaxed">
-              This premium {product.name.toLowerCase()} is crafted with
-              high-quality materials to ensure comfort, durability,
-              and timeless style. Designed exclusively for Universal Trend.
+              {product.description}
             </p>
 
-            {/* Size Selector */}
-            {product.category !== "Perfumes" && (
+            {/* SIZE SELECTOR */}
+            {product.type !== "fragrances" && (
               <div className="mb-8">
                 <h4 className="text-sm font-medium mb-3">
                   Select Size
@@ -101,11 +116,11 @@ const ProductDetails = () => {
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`w-12 h-10 border text-sm font-medium transition
+                      className={`w-12 h-10 border text-sm font-medium
                         ${
                           selectedSize === size
                             ? "bg-black text-white"
-                            : "bg-white hover:bg-black hover:text-white"
+                            : "hover:bg-black hover:text-white"
                         }`}
                     >
                       {size}
@@ -115,7 +130,6 @@ const ProductDetails = () => {
               </div>
             )}
 
-            {/* Add to Cart */}
             <button
               onClick={handleAddToCart}
               className="bg-black text-white px-8 py-3 hover:bg-gray-800 transition"
@@ -130,49 +144,22 @@ const ProductDetails = () => {
               ← Back to products
             </button>
           </div>
-
         </div>
 
-        {/* REVIEWS SECTION */}
+        {/* REVIEWS */}
         <div className="mt-20">
           <h2 className="text-2xl font-semibold mb-8">
             Customer Reviews
           </h2>
 
-          <div className="space-y-6">
-
-            {/* Review */}
-            <div className="bg-white border p-6 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-yellow-500">★★★★★</span>
-                <span className="text-sm text-gray-500">
-                  (5.0)
-                </span>
-              </div>
-              <p className="text-sm text-gray-700">
-                Excellent quality! Fits perfectly and looks premium.
-                Will definitely buy again.
-              </p>
-              <p className="text-xs text-gray-400 mt-2">
-                — Verified Buyer
-              </p>
-            </div>
-
-            <div className="bg-white border p-6 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-yellow-500">★★★★☆</span>
-                <span className="text-sm text-gray-500">
-                  (4.0)
-                </span>
-              </div>
-              <p className="text-sm text-gray-700">
-                Nice product, good fabric. Delivery was quick.
-              </p>
-              <p className="text-xs text-gray-400 mt-2">
-                — Verified Buyer
-              </p>
-            </div>
-
+          <div className="bg-white border p-6 rounded-lg">
+            <span className="text-yellow-500">★★★★★</span>
+            <p className="text-sm text-gray-700 mt-2">
+              Excellent quality and premium feel.
+            </p>
+            <p className="text-xs text-gray-400 mt-1">
+              — Verified Buyer
+            </p>
           </div>
         </div>
 

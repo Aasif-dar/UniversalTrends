@@ -40,11 +40,15 @@ const Footer = () => {
 
           <div className="w-full h-40 rounded overflow-hidden">
             <iframe
-              title="shop-location"
-              src="https://www.google.com/maps?q=New%20Delhi&output=embed"
-              className="w-full h-full border-0"
-              loading="lazy"
-            />
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3307.956639083192!2d74.814139!3d33.9936475!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38e18ddbca53feb5%3A0x804ec14e8fc466c8!2sUniversal%20Trend!5e0!3m2!1sen!2sin!4v1770114679225!5m2!1sen!2sin"
+            width="100%"
+            height="180"
+            style={{ border: 0 }}
+            allowFullScreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Store Location"
+          ></iframe>
           </div>
         </div>
 

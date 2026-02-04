@@ -6,7 +6,11 @@ const AdminProducts = () => {
   const [products, setProducts] = useState([]);
 
   const fetchProducts = async () => {
-    const res = await fetch("http://localhost:5000/api/products");
+    const res = await fetch("http://localhost:5000/api/admin/products", {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
     const data = await res.json();
     setProducts(data);
   };
@@ -22,7 +26,7 @@ const AdminProducts = () => {
 
     if (!confirmDelete) return;
 
-    await fetch(`http://localhost:5000/api/products/${id}`, {
+    await fetch(`http://localhost:5000/api/admin/products/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${user.token}`,

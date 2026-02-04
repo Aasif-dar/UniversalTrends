@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
-import products from "../data/Product";
 
 const PopularProducts = () => {
-  // const [products, setProducts] = useState([]);
-  // useEffect(() => {
-  //   fetch("http://localhost:5000/api/products/popular")
-  //     .then((res) => res.json())
-  //     .then(setProducts);
-  // }, []);
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    fetch("http://localhost:5000/api/products/popular")
+      .then((res) => res.json())
+      .then(setProducts);
+  }, []);
 
   if (products.length === 0) return null;
 

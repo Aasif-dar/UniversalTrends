@@ -23,7 +23,6 @@ import { useLocation } from "react-router-dom";
 import AdminProducts from "./pages/AdminProducts";
 
 
-
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();

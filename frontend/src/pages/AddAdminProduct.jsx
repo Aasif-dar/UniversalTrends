@@ -16,33 +16,76 @@ const AdminAddProduct = () => {
     description: "",
   });
 
+  // const submit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (!type || !category || !image) {
+  //     alert("All fields including image are required");
+  //     return;
+  //   }
+
+  //   const data = new FormData();
+  //   data.append("name", form.name);
+  //   data.append("price", form.price);
+  //   data.append("description", form.description);
+  //   data.append("type", type);
+  //   data.append("category", category);
+  //   data.append("isPopular", isPopular);
+  //   data.append("image", image);
+
+  //   await fetch("http://localhost:5000/api/admin/products", {
+  //     method: "POST",
+  //     headers: {
+  //       Authorization: `Bearer ${user.token}`,
+  //     },
+  //     body: data,
+  //   });
+
+  //   alert("Product added successfully");
+  // };
+
   const submit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!type || !category || !image) {
-      alert("All fields including image are required");
-      return;
-    }
+  if (!type || !category || !image) {
+    alert("All fields including image are required");
+    return;
+  }
 
-    const data = new FormData();
-    data.append("name", form.name);
-    data.append("price", form.price);
-    data.append("description", form.description);
-    data.append("type", type);
-    data.append("category", category);
-    data.append("isPopular", isPopular);
-    data.append("image", image);
+  const data = new FormData();
+  data.append("name", form.name);
+  data.append("price", form.price);
+  data.append("description", form.description);
+  data.append("type", type);
+  data.append("category", category);
+  data.append("isPopular", isPopular);
+  data.append("image", image);
 
-    await fetch("http://localhost:5000/api/products", {
+  const res = await fetch(
+    "http://localhost:5000/api/admin/products",
+    {
       method: "POST",
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
       body: data,
-    });
+    }
+  );
+  let result;
+try {
+  result = await res.json();
+} catch {
+  alert("Server error (invalid response)");
+  return;
+}
 
-    alert("Product added successfully");
-  };
+  if (!res.ok) {
+    alert(result.message || "Failed to add product");
+    return;
+  }
+
+  alert("Product added successfully");
+};
 
   return (
     <section className="py-16 bg-gray-50">
@@ -126,11 +169,16 @@ const AdminAddProduct = () => {
             />
             Mark as Popular Product
           </label>
-
-          <button className="w-full bg-black text-white py-2">
-            Add Product
-          </button>
-
+        <button
+        disabled={!type || !category || !image}
+        className={`w-full py-2 ${
+          type && category && image
+            ? "bg-black text-white"
+            : "bg-gray-300 cursor-not-allowed"
+        }`}
+        >
+          Add Product
+        </button>
         </form>
       </div>
     </section>

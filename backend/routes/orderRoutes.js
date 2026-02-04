@@ -3,28 +3,52 @@ import Order from "../models/Orders.js";
 import User from "../models/User.js";
 import protect from "../middlewares/authMiddleware.js";
 import adminOnly from "../middlewares/adminMiddleware.js";
-import { sendWhatsApp, sendEmail } from "../utils/notify.js";
+import { sendEmail } from "../utils/notify.js";
 
 const router = express.Router();
 
 // CREATE ORDER (USER)
+
 router.post("/", protect, async (req, res) => {
-  const user = await User.findById(req.user);
+  try {
+    const user = await User.findById(req.user);
 
-  const order = await Order.create({
-    user: user._id,
-    items: req.body.items,
-    total: req.body.total,
-  });
+    const {
+      items,
+      total,
+      address,
+      phone,
+      paymentMethod,
+      deliveryCharge,
+    } = req.body;
 
-  const fullOrder = { ...order._doc, user };
+    if (!items || !address || !phone || !total) {
+      return res.status(400).json({
+        message: "Missing order details",
+      });
+    }
 
-  await sendWhatsApp(fullOrder);
-  await sendEmail(fullOrder);
+    const order = await Order.create({
+      user: user._id,
+      items,
+      total,
+      address,
+      phone,
+      paymentMethod,
+      deliveryCharge,
+    });
 
-  res.json(order);
+    const fullOrder = { ...order._doc, user };
+
+    await sendEmail(fullOrder);      // 👈 email to YOU
+    // await sendWhatsApp(fullOrder);   
+
+    res.status(201).json(order);
+  } catch (err) {
+    console.error("ORDER ERROR:", err);
+    res.status(500).json({ message: "Order failed" });
+  }
 });
-
 // 🔵 USER ORDER HISTORY
 router.get("/my", protect, async (req, res) => {
   const orders = await Order.find({ user: req.user }).sort({ createdAt: -1 });
