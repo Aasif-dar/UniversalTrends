@@ -5,6 +5,7 @@ import SortBar from "../components/SortBar";
 import MobileFilterDrawer from "../components/MobileFilterDrawer";
 import Footer from "../components/Footer";
 import adminCategories from "../data/adminCategories";
+import { useSearchParams } from "react-router-dom";
 
 const sortProducts = (products, sort) => {
   if (sort === "priceLowHigh")
@@ -21,9 +22,18 @@ const Men = () => {
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState("All");
   const [sort, setSort] = useState("default");
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [searchParams] = useSearchParams();
+  const urlCategory = searchParams.get("category");
+
+  const [activeCategory, setActiveCategory] = useState(
+    urlCategory || "All"
+  );
+
+  useEffect(() => {
+    if (urlCategory) setActiveCategory(urlCategory);
+  }, [urlCategory]);
 
   // 🔹 FETCH FROM BACKEND
   useEffect(() => {

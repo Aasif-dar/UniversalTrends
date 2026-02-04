@@ -21,7 +21,7 @@ import Profile from "./pages/Profile";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
 import AdminProducts from "./pages/AdminProducts";
-
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -51,7 +51,7 @@ function App() {
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
       />
-
+      <ScrollToTop />
       <Routes>
 
       <Route

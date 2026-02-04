@@ -1,7 +1,7 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuth } from "../Context/AuthContext";
-
+import LogoutButton from "./LogOutButton";
 const SideBar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -98,6 +98,10 @@ const SideBar = ({ isOpen, onClose }) => {
               </button>
             </div>
           )}
+          {user &&(
+            <LogoutButton text-xs uppercase tracking-widest text-gray-400 mb-4 />
+          )
+          }
 
           {/* MENU VIEW */}
           {view === "menu" && (
