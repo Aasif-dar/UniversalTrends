@@ -1,13 +1,13 @@
+
 import express from "express";
 import Order from "../models/Orders.js";
 import User from "../models/User.js";
 import protect from "../middlewares/authMiddleware.js";
 import adminOnly from "../middlewares/adminMiddleware.js";
 import { sendEmail } from "../utils/notify.js";
+import { generateInvoice } from "../utils/genrateInvoice.js";
 
 const router = express.Router();
-
-// CREATE ORDER (USER)
 
 router.post("/", protect, async (req, res) => {
   try {
@@ -15,14 +15,16 @@ router.post("/", protect, async (req, res) => {
 
     const {
       items,
+      subtotal,
       total,
       address,
       phone,
+      state,
       paymentMethod,
       deliveryCharge,
     } = req.body;
 
-    if (!items || !address || !phone || !total) {
+    if (!items || !address || !phone) {
       return res.status(400).json({
         message: "Missing order details",
       });
@@ -31,19 +33,30 @@ router.post("/", protect, async (req, res) => {
     const order = await Order.create({
       user: user._id,
       items,
+      subtotal,
       total,
       address,
       phone,
+      state,
       paymentMethod,
       deliveryCharge,
     });
 
+    const populatedOrder = await order.populate("user");
+
+    // 🔥 Generate Invoice
+    const invoicePath = generateInvoice(populatedOrder);
+
+    order.invoiceUrl = invoicePath;
+    await order.save();
+
     const fullOrder = { ...order._doc, user };
 
-    await sendEmail(fullOrder);      // 👈 email to YOU
-    // await sendWhatsApp(fullOrder);   
+    // Send Email
+    // await sendEmail(fullOrder);
 
     res.status(201).json(order);
+
   } catch (err) {
     console.error("ORDER ERROR:", err);
     res.status(500).json({ message: "Order failed" });

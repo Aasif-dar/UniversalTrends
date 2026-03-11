@@ -1,9 +1,10 @@
 // data/categories.js
+import shirtImage from "../assets/shirtcategory.png"
 const categories = [
   {
     id: 1,
     title: "Men's Shirts",
-    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab",
+    image: shirtImage,
     path: "/men",
     category: "Shirts",
   },
