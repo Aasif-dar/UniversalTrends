@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useCart } from "../Context/CartContext";
-
+import {toast} from "sonner"
 const sizes = ["S", "M", "L", "XL", "XXL"];
 
 const ProductDetails = () => {
@@ -59,7 +59,7 @@ const ProductDetails = () => {
 
   const handleAddToCart = () => {
     if (!selectedSize && product.type !== "fragrances") {
-      alert("Please select a size");
+      toast.warning("Please select a size first ⚠️");
       return;
     }
 
@@ -68,6 +68,7 @@ const ProductDetails = () => {
       size: selectedSize || "Standard",
       quantity: 1
     });
+     toast.success("Added to cart 🛒");
   };
 
   return (

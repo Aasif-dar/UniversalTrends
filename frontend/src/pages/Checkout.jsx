@@ -2,11 +2,14 @@ import { useState } from "react";
 import { useCart } from "../Context/CartContext";
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import {toast} from "sonner"
 
 const Checkout = () => {
   const { cart, clearCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     phone: "",
@@ -14,6 +17,10 @@ const Checkout = () => {
     state: "",
     payment: "cod",
   });
+
+  const handleChange = (field, value) => {
+    setForm({ ...form, [field]: value });
+  };
 
   const subtotal = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -27,71 +34,96 @@ const Checkout = () => {
 
   const placeOrder = async () => {
     if (!form.phone || !form.address || !form.state) {
-      alert("Please fill all details");
+      toast.warning("Please fill all delivery details");
       return;
     }
 
-    const res = await fetch("http://localhost:5000/api/orders", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user.token}`,
-      },
-      body: JSON.stringify({
-        items: cart,
-        total,
-        address: form.address,
-        phone: form.phone,
-        paymentMethod: form.payment,
-        deliveryCharge,
-      }),
-    });
+    try {
+      setLoading(true);
 
-    if (!res.ok) {
-      alert("Order failed");
-      return;
+      const res = await fetch("http://localhost:5000/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({
+          items: cart,
+          subtotal,
+          total,
+          address: form.address,
+          phone: form.phone,
+          state: form.state,
+          paymentMethod: form.payment,
+          deliveryCharge
+})
+      });
+
+      if (!res.ok) {
+        alert("Order failed");
+        setLoading(false);
+        return;
+      }
+
+      const data = await res.json();
+
+      clearCart();
+
+
+      navigate(`/order-success/${data._id}`);
+      console.log(data)
+      
+
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong");
+    } finally {
+      setLoading(false);
     }
-
-    clearCart();
-    navigate("/order-success");
   };
 
-  return (
-    <section className="py-16 bg-gray-50">
-      <div className="max-w-5xl mx-auto px-4 grid md:grid-cols-2 gap-10">
+  if (cart.length === 0) {
+    return (
+      <section className="min-h-[70vh] flex flex-col items-center justify-center">
+        <p className="text-gray-500 mb-4">Your cart is empty</p>
+      </section>
+    );
+  }
 
-        {/* LEFT – FORM */}
-        <div className="bg-white p-6 border rounded-lg">
-          <h2 className="text-xl font-semibold mb-6">
+  return (
+    <section className="py-16 bg-gray-50 min-h-screen">
+      <div className="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-10">
+
+        {/* DELIVERY FORM */}
+        <div className="bg-white p-8 border rounded-xl shadow-sm">
+
+          <h2 className="text-2xl font-semibold mb-6">
             Delivery Details
           </h2>
 
           <input
             placeholder="Phone Number"
-            className="border w-full px-3 py-2 mb-4"
-            onChange={(e) =>
-              setForm({ ...form, phone: e.target.value })
-            }
+            className="border w-full px-4 py-3 rounded-md mb-4"
+            value={form.phone}
+            onChange={(e) => handleChange("phone", e.target.value)}
           />
 
           <textarea
             placeholder="Full Address"
-            className="border w-full px-3 py-2 mb-4"
             rows="3"
-            onChange={(e) =>
-              setForm({ ...form, address: e.target.value })
-            }
+            className="border w-full px-4 py-3 rounded-md mb-4"
+            value={form.address}
+            onChange={(e) => handleChange("address", e.target.value)}
           />
 
           <input
-            placeholder="State (e.g. Kashmir)"
-            className="border w-full px-3 py-2 mb-4"
-            onChange={(e) =>
-              setForm({ ...form, state: e.target.value })
-            }
+            placeholder="State (example: Kashmir)"
+            className="border w-full px-4 py-3 rounded-md mb-6"
+            value={form.state}
+            onChange={(e) => handleChange("state", e.target.value)}
           />
 
-          <h3 className="font-medium mb-2">
+          <h3 className="font-medium mb-3">
             Payment Method
           </h3>
 
@@ -99,26 +131,43 @@ const Checkout = () => {
             <input
               type="radio"
               checked={form.payment === "cod"}
-              onChange={() =>
-                setForm({ ...form, payment: "cod" })
-              }
+              onChange={() => handleChange("payment", "cod")}
             />
             Cash on Delivery
           </label>
 
-          <label className="flex items-center gap-2">
+          <label className="flex items-center gap-2 text-gray-400">
             <input type="radio" disabled />
             Online Payment (Coming Soon)
           </label>
+
         </div>
 
-        {/* RIGHT – SUMMARY */}
-        <div className="bg-white p-6 border rounded-lg">
-          <h2 className="text-xl font-semibold mb-6">
+        {/* ORDER SUMMARY */}
+        <div className="bg-white p-8 border rounded-xl shadow-sm h-fit sticky top-24">
+
+          <h2 className="text-2xl font-semibold mb-6">
             Order Summary
           </h2>
 
-          <div className="space-y-3 mb-6">
+          <div className="space-y-4 mb-6">
+
+            {cart.map((item) => (
+              <div
+                key={`${item.id}-${item.size}`}
+                className="flex justify-between text-sm"
+              >
+                <span>
+                  {item.name} × {item.quantity}
+                </span>
+                <span>
+                  ₹{item.price * item.quantity}
+                </span>
+              </div>
+            ))}
+
+            <hr />
+
             <div className="flex justify-between">
               <span>Subtotal</span>
               <span>₹{subtotal}</span>
@@ -133,14 +182,17 @@ const Checkout = () => {
               <span>Total</span>
               <span>₹{total}</span>
             </div>
+
           </div>
 
           <button
             onClick={placeOrder}
-            className="w-full bg-black text-white py-3"
+            disabled={loading}
+            className="w-full bg-black text-white py-3 rounded-md hover:bg-gray-800 transition"
           >
-            Place Order
+            {loading ? "Placing Order..." : "Place Order"}
           </button>
+
         </div>
 
       </div>

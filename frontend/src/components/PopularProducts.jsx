@@ -3,13 +3,28 @@ import ProductCard from "./ProductCard";
 
 const PopularProducts = () => {
   const [products, setProducts] = useState([]);
+
   useEffect(() => {
-    fetch("http://localhost:5000/api/products/popular")
+    fetch("/api/products/popular")
       .then((res) => res.json())
-      .then(setProducts);
+      .then((data) => {
+        console.log("Popular products:", data);
+        if (Array.isArray(data)) {
+          setProducts(data);
+        } else {
+          setProducts([]);
+        }
+      })
+      .catch((err) => console.error("Fetch error:", err));
   }, []);
 
-  if (products.length === 0) return null;
+  if (!products.length) {
+    return (
+      <p className="text-center py-10 text-gray-500">
+        No popular products found
+      </p>
+    );
+  }
 
   return (
     <section className="py-16 bg-gray-100">

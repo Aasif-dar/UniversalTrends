@@ -43,7 +43,6 @@ const Cart = () => {
                   alt={item.name}
                   className="w-24 h-24 object-cover rounded"
                 />
-
                 <div className="flex-1">
                   <h3 className="font-medium">
                     {item.name}

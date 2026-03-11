@@ -1,5 +1,17 @@
 import mongoose from "mongoose";
 
+const orderItemSchema = new mongoose.Schema({
+  productId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Product",
+  },
+  name: String,
+  price: Number,
+  quantity: Number,
+  size: String,
+  image: String,
+});
+
 const orderSchema = new mongoose.Schema(
   {
     user: {
@@ -8,8 +20,15 @@ const orderSchema = new mongoose.Schema(
       required: true,
     },
 
-    items: {
-      type: Array,
+    items: [orderItemSchema],
+
+    subtotal: {
+      type: Number,
+      required: true,
+    },
+
+    deliveryCharge: {
+      type: Number,
       required: true,
     },
 
@@ -28,14 +47,19 @@ const orderSchema = new mongoose.Schema(
       required: true,
     },
 
+    state: {
+      type: String,
+      required: true,
+    },
+
     paymentMethod: {
       type: String,
+      enum: ["cod", "online"],
       default: "cod",
     },
 
-    deliveryCharge: {
-      type: Number,
-      required: true,
+    invoiceUrl: {
+      type: String,
     },
 
     status: {

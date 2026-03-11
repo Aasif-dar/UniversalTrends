@@ -9,7 +9,7 @@ import Women from "./pages/Women";
 import Fragrances from "./pages/Fragrence";
 import Auth from "./pages/Auth";
 import Cart from "./pages/Cart";
-import ProductDetails from "./components/ProductDetails";
+import ProductDetails from "./pages/ProductDetails";
 import Checkout from "./pages/Checkout";
 import OrderSuccess from "./pages/Ordersuccess";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -22,6 +22,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
 import AdminProducts from "./pages/AdminProducts";
 import ScrollToTop from "./components/ScrollToTop";
+import { Toaster } from "sonner";
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -38,6 +39,7 @@ function App() {
     <Routes location={location}>
       {/* your routes */}
     </Routes>
+    
   </motion.div>
 </AnimatePresence>
 
@@ -52,6 +54,7 @@ function App() {
         onClose={() => setSidebarOpen(false)}
       />
       <ScrollToTop />
+      <Toaster position="top-right" richColors />
       <Routes>
 
       <Route
@@ -121,8 +124,8 @@ function App() {
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="/order-success" element={<OrderSuccess />} />
-
+        <Route path="/order-success/:orderId" element={<OrderSuccess />}/>
+        
       </Routes>
     </>
   );
