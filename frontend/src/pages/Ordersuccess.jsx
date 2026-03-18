@@ -3,28 +3,39 @@ import { useParams, useNavigate } from "react-router-dom";
 const OrderSuccess = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
+  
+  const downloadInvoice = async () => {
 
-  const downloadInvoice = () => {
-    window.open(`http://localhost:5000/invoices/invoice-${orderId}.pdf`);
-  };
+  const res = await fetch(
+    `http://localhost:5000/api/orders/${orderId}`
+  );
 
-  const sendWhatsApp = () => {
+  const order = await res.json();
 
-    const invoiceLink = `http://localhost:5000/invoices/invoice-${orderId}.pdf`;
+  window.open(order.invoiceUrl);
+};
 
-    const message = `
+ const sendWhatsApp = async () => {
+
+  const res = await fetch(
+    `http://localhost:5000/api/orders/${orderId}`
+  );
+
+  const order = await res.json();
+
+  const message = `
 🧾 Universal Trend Invoice
 
 Order ID: ${orderId}
 
 Download your invoice:
-${invoiceLink}
+${order.invoiceUrl}
 `;
 
-    const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+  const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
 
-    window.open(url, "_blank");
-  };
+  window.open(url, "_blank");
+};
 
   return (
     <section className="min-h-screen flex items-center justify-center bg-gray-50">

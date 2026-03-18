@@ -1,9 +1,20 @@
-// data/categories.js
 import shirtImage from "../assets/shirtcategory.png"
+import shortsImage from "../assets/shortsimage.png"
+import womenSweater from "../assets/womensweater.png"
+import menshoes from "../assets/menshoes.png"
+import mensTshirt from "../assets/menTshirt.png"
+import deodrentsandattars from "../assets/deodrentsandattars.png"
+import mensJeans from "../assets/mensjeans.png"
+import mensJacktes from "../assets/mensjacket.png"
+import mensHoodies from "../assets/mensHoodie.png"
+import Accessories from "../assets/accessories.png"
+import WomensBags from "../assets/womensBags.png"
+import WomenShoes from "../assets/womensShoes.png"
 const categories = [
   {
     id: 1,
     title: "Men's Shirts",
+    subtitle: "Trending Styles",
     image: shirtImage,
     path: "/men",
     category: "Shirts",
@@ -11,37 +22,90 @@ const categories = [
   {
     id: 2,
     title: "Men's Shorts",
-    image: "https://images.unsplash.com/photo-1593032465175-481ac7f401a0",
+    subtitle: "Summer Picks",
+    image: shortsImage,
     path: "/men",
     category: "Shorts",
   },
   {
     id: 3,
+    title: "Men's Hoodies",
+    subtitle: "Winter Collection",
+    image: mensHoodies,
+    path: "/men",
+    category: "Uppers",
+  },
+  {
+    id: 4,
     title: "Women's Sweaters",
-    image: "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb",
+    subtitle: "Winter Collection",
+    image: womenSweater,
     path: "/women",
     category: "Sweaters",
   },
   {
-    id: 4,
-    title: "Women's Scarfs",
-    image: "https://images.unsplash.com/photo-1600180758890-6b94519a8ba6",
+    id: 5,
+    title: "Women's Bags",
+    subtitle: "New Arrivals",
+    image: WomensBags,
     path: "/women",
-    category: "Scarfs",
+    category: "Bags",
   },
   {
-    id: 5,
+    id: 6,
+    title: "Men's Jackets",
+    subtitle: "Top Picks",
+    image: mensJacktes,
+    path: "/men",
+    category: "Jackets",
+  },
+  {
+    id: 7,
+    title: "Men's Jeans",
+    subtitle: "Best Sellers",
+    image: mensJeans,
+    path: "/men",
+    category: "Jeans",
+  },
+  {
+    id: 8,
     title: "Men's Shoes",
-    image: "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77",
+    subtitle: "Latest Styles",
+    image: menshoes,
     path: "/men",
     category: "Shoes",
   },
   {
-    id: 6,
+    id: 9,
+    title: "Men's T-Shirts",
+    subtitle: "Casual Wear",
+    image: mensTshirt,
+    path: "/men",
+    category: "Tshirts",
+  },
+  {
+    id: 10,
     title: "Fragrance",
-    image: "https://images.unsplash.com/photo-1520975916090-3105956dac38",
+    subtitle: "Deodorants & Attars",
+    image: deodrentsandattars,
     path: "/fragrances",
     category: "All",
+  },
+   {
+    id: 11,
+    title: "Accessories",
+    subtitle: "Caps & Belts ",
+    image: Accessories,
+    path: "/men",
+    category: "Accessories",
+  },
+  {
+    id: 12,
+    title: "Women's Shoes",
+    subtitle: "Style that speaks with every step",
+    image: WomenShoes,
+    path: "/women",
+    category: "Bags",
   },
 ];
 
