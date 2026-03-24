@@ -71,7 +71,7 @@ const AdminProducts = () => {
 
                   <td className="p-3">
                     <img
-                      src={product.image}
+                      src={product.images[0]  }
                       className="w-12 h-12 object-cover rounded"
                     />
                   </td>
@@ -103,7 +103,7 @@ const AdminProducts = () => {
               <div className="flex gap-4">
 
                 <img
-                  src={product.image}
+                  src={product.images[0]}
                   className="w-20 h-20 object-cover rounded"
                 />
 

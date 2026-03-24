@@ -54,37 +54,6 @@ const ProductCard = ({ product, index = 0 }) => {
               −{discountPct}%
             </span>
           )}
-
-          {/* Wishlist */}
-          {/* <button
-            className={`pc-wish ${isWished?"wished":""}  absolute top-3 right-3 w-8 h-8 flex items-center justify-center border rounded-sm z-20 backdrop-blur-sm cursor-pointer`}
-            style={{
-              background: isWished ? "#0a0a0a" : "rgba(255,255,255,0.88)",
-              borderColor: isWished ? "#0a0a0a" : "rgba(212,175,55,0.35)"
-            }}
-            onClick={(e) => { e.preventDefault(); setIsWished(!isWished); }}
-            aria-label="Wishlist"
-          >
-            <svg width="13" height="12" viewBox="0 0 14 13" fill="none">
-              <path
-                d="M7 11.5C7 11.5 1 7.5 1 3.5C1 2.12 2.12 1 3.5 1C4.45 1 5.28 1.54 5.72 2.34L7 4.5L8.28 2.34C8.72 1.54 9.55 1 10.5 1C11.88 1 13 2.12 13 3.5C13 7.5 7 11.5 7 11.5Z"
-                stroke={isWished ? "#d4af37" : "#0a0a0a"}
-                fill={isWished ? "#d4af37" : "none"}
-                strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"
-              />
-            </svg>
-          </button> */}
-
-          {/* Quick add */}
-          {/* <button
-            className="pc-quick absolute bottom-0 left-0 right-0 w-full py-3.5 bg-[#0a0a0a] text-[#d4af37] font-outfit text-[10px] font-medium tracking-[0.28em] uppercase flex items-center justify-center gap-2 z-20 border-none cursor-pointer"
-            onClick={(e) => e.preventDefault()}
-          >
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M6 1V11M1 6H11" stroke="#d4af37" strokeWidth="1.4" strokeLinecap="round"/>
-            </svg>
-            Quick Add
-          </button> */}
         </div>
 
         {/* Info */}
