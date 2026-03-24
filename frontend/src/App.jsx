@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import TopBar from "./components/TopBar";
-import NavBar from "./components/NavBar";
+import NavBar from "./components/Navbar";
 import SideBar from "./components/SideBar";
 import Home from "./pages/Home";
 import Men from "./pages/Men";
@@ -49,7 +49,6 @@ function App() {
     <>
       <TopBar onMenuClick={() => setSidebarOpen(true)} />
       <NavBar />
-
       <SideBar
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
