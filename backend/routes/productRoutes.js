@@ -6,6 +6,7 @@ const router = express.Router();
 /* GET ALL PRODUCTS */
 router.get("/", async (req, res) => {
   try {
+
     const { type, category } = req.query;
 
     const query = {};
@@ -16,29 +17,35 @@ router.get("/", async (req, res) => {
     const products = await Product.find(query);
 
     res.json(products);
+
   } catch (error) {
+
     res.status(500).json({ message: error.message });
+
   }
 });
 
 /* GET POPULAR PRODUCTS */
 router.get("/popular", async (req, res) => {
-  console.log("POPULAR ROUTE HIT");
 
   try {
+
     const products = await Product.find({ isPopular: true });
+
     res.json(products);
+
   } catch (error) {
+
     res.status(500).json({ message: error.message });
-  }});
-// }); catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// });
+
+  }
+});
 
 /* GET PRODUCT BY ID */
 router.get("/:id", async (req, res) => {
+
   try {
+
     const product = await Product.findById(req.params.id);
 
     if (!product) {
@@ -46,9 +53,13 @@ router.get("/:id", async (req, res) => {
     }
 
     res.json(product);
+
   } catch (error) {
+
     res.status(500).json({ message: error.message });
+
   }
+
 });
 
 export default router;

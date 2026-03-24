@@ -6,6 +6,8 @@ import protect from "../middlewares/authMiddleware.js";
 import adminOnly from "../middlewares/adminMiddleware.js";
 import { sendEmail } from "../utils/notify.js";
 import { generateInvoice } from "../utils/genrateInvoice.js";
+import cloudinary from "../config/cloudinary.js";
+import fs from "fs";
 
 const router = express.Router();
 
@@ -45,10 +47,20 @@ router.post("/", protect, async (req, res) => {
     const populatedOrder = await order.populate("user");
 
     // 🔥 Generate Invoice
-    const invoicePath = generateInvoice(populatedOrder);
+   const invoicePath = generateInvoice(populatedOrder);
 
-    order.invoiceUrl = invoicePath;
+// upload to cloudinary
+    const upload = await cloudinary.uploader.upload(invoicePath, {
+    resource_type: "raw",
+    folder: "invoices",
+    });
+
+    order.invoiceUrl = upload.secure_url; 
+
     await order.save();
+
+// optional: delete local file
+    fs.unlinkSync(invoicePath);
 
     const fullOrder = { ...order._doc, user };
 
@@ -85,4 +97,11 @@ router.put("/:id/status", protect, adminOnly, async (req, res) => {
 });
 
 
+router.get("/:id", protect, async (req, res) => {
+
+  const order = await Order.findById(req.params.id);
+
+  res.json(order);
+
+});
 export default router;

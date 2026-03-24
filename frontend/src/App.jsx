@@ -24,6 +24,7 @@ import AdminProducts from "./pages/AdminProducts";
 import ScrollToTop from "./components/ScrollToTop";
 import { Toaster } from "sonner";
 
+
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
